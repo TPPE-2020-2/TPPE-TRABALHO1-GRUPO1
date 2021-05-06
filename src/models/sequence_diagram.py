@@ -20,7 +20,7 @@ class SequenceDiagram():
     
     def __str__(self):  # pragma: no cover
         return 'Name: {}\nGuard Condition: {}\nLife Lines: {}\nElements: {}\n'.format(self.name, \
-                                                                            self.start_node, \
+                                                                            self.guard_condition, \
                                                                             self.life_lines, \
                                                                             self.messages, \
                                                                             self.fragments)

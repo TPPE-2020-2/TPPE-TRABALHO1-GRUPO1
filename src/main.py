@@ -137,11 +137,6 @@ def activity_diagram_menu(name):
 def sequence_diagram_menu(sequence_diagram):
     util.clear()
     lifelines = get_lifelines()
-    print("Lifelines: " + str(type(lifelines)))
-    for lifeline in lifelines:
-        print('Lifeline: ' + str(lifeline))
-        print('Lifeline: ' + str(lifelines[lifeline]))
-        print("Lifeline type: " + str(type(lifeline)))
     sequence_diagram.set_life_lines(lifelines)
     while True:
         print('----- Sequence Diagram Menu -----')
@@ -166,9 +161,9 @@ def sequence_diagram_menu(sequence_diagram):
             print('Invalid input. Please select again\n')
 
 
-def add_transition(activity_diagram, source_element):
+def add_transition(activity_diagram, target_element):
     elements = list(activity_diagram.elements.values())
-    position = elements.index(source_element)
+    position = elements.index(target_element)
     before_element = elements[0 : position]
     source = None
     name = input('Type the transition name: ')
@@ -199,7 +194,7 @@ def add_transition(activity_diagram, source_element):
     activity_diagram.set_transitions(Transition(name=name,
                                                 prob=prob,
                                                 source=source_node, 
-                                                target=None, 
+                                                target=target_element, 
                                                 element_type=util.TRANSITION_NODE))
 
 
