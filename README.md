@@ -39,7 +39,7 @@ ou
 python3 main.py
 ```
 
-- Após inserir todos os dados e clicar em gerar o diagrama, o mesmo estará disponível na pasta docs.
+- Após inserir todos os dados e clicar em gerar o diagrama, o mesmo estará disponível na pasta xmls.
 - Ao finalizar a execução, com a opção ```Exit```, desative o ambiente virtual com o comando:
 ```
 deactivate
