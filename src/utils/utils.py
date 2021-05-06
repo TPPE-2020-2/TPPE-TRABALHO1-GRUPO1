@@ -83,7 +83,7 @@ class Util():
         except OrderError as e:
             raise OrderError(e)
         xml = activity_diagram.to_xml()
-        f = open(f"docs/{activity_diagram.name}.xml", "w+")
+        f = open(f"xmls/{activity_diagram.name}.xml", "w+")
         f.write(xml)
         f.close()
 
