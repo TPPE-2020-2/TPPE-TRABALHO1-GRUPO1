@@ -78,6 +78,7 @@ def activity_diagram_menu(name):
                 activity_node = ActivityDiagramElement(name=activity_node_name, element_type=util.ACTIVITY_NODE)
                 activity_diagram.set_elements(activity_node)
                 add_transition(activity_diagram, activity_node)
+                print('Create the Sequence Diagram that represents the activity ' + activity_node_name)
                 sequence_diagram = create_sequence_diagram()
                 sequence_diagram = sequence_diagram_menu(sequence_diagram)
                 activity_diagram.set_sequence_diagrams(sequence_diagram)
@@ -136,19 +137,29 @@ def activity_diagram_menu(name):
 def sequence_diagram_menu(sequence_diagram):
     util.clear()
     lifelines = get_lifelines()
+    print("Lifelines: " + str(type(lifelines)))
+    for lifeline in lifelines:
+        print('Lifeline: ' + str(lifeline))
+        print('Lifeline: ' + str(lifelines[lifeline]))
+        print("Lifeline type: " + str(type(lifeline)))
     sequence_diagram.set_life_lines(lifelines)
     while True:
         print('----- Sequence Diagram Menu -----')
         print('Select the element you want to generate:\n'
               f'1 - {util.MESSAGE}\n'
               f'2 - {util.FRAGMENT}\n'
-              '3 - Return to Main Menu')
+              '3 - Return to Activity Diagram Menu')
         user_in = input('Insert your option: ')
         if user_in == '1':
             sequence_diagram.set_messages(add_message(lifelines))
         elif user_in == '2':
-            sequence_diagram.set_fragments(add_fragment())
+            print(len(sequence_diagram.fragments))
+            if len(sequence_diagram.fragments) == 0:
+                sequence_diagram.set_fragments(add_fragment(sequence_diagram.name))
+            else:
+                sequence_diagram.set_fragments(add_fragment())
         elif user_in == '3':
+            sequence_diagram.fragments[0].sequence_diagram = sequence_diagram
             return sequence_diagram
         else:
             util.clear()
@@ -204,10 +215,18 @@ def get_lifelines():
     return lifelines
 
 
-def add_fragment():
+def add_fragment(sequence_diagram_name=None):
     fragment_name = input('Insert the Fragment name: ')
-    diagram_name = input('Insert the Sequence Diagram name: ')
-    fragment = Fragment(name=fragment_name, represented_by=diagram_name)
+    if sequence_diagram_name != None:
+        diagram_name = sequence_diagram_name
+        sequence_diagram = None
+    else:
+        diagram_name = input('Insert the Sequence Diagram name: ')
+        print('Create the Sequence Diagram that is represented by the fragment ' + fragment_name)
+        sequence_diagram = create_sequence_diagram(diagram_name)
+        sequence_diagram.set_fragments(Fragment(name=fragment_name, represented_by=diagram_name))
+        sequence_diagram = sequence_diagram_menu(sequence_diagram)
+    fragment = Fragment(name=fragment_name, represented_by=diagram_name, sequence_diagram=sequence_diagram)
     return fragment
 
 
@@ -259,9 +278,12 @@ def print_message_type():
           '\n 2 - Aynchronous',
           '\n 3 - Reply')
 
-def create_sequence_diagram():
+def create_sequence_diagram(diagram_name=None):
     print('----- Sequence Diagram -----')
-    name = input('Insert the Sequence Diagram name: ')
+    if diagram_name != None:
+        name = diagram_name
+    else:
+        name = input('Insert the Sequence Diagram name: ')
     print('Insert the guard condition:',
                             '\n 1 - True',
                             '\n 2 - False')

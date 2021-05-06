@@ -1,2 +1,3 @@
 # Just for now, we upgrade that after
-unittest discover -s tests/
+coverage run -m unittest discover -s tests/
+coverage report

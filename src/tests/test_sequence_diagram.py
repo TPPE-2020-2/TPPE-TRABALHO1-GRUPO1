@@ -30,22 +30,13 @@ class TestSequenceDiagram(unittest.TestCase):
         self.assertEqual(self.sequence_diagram.get_guard_condition(), guard_condition)
 
     @parameterized.expand([
-        [SequenceDiagramElement('Elemento 1')],
-        [SequenceDiagramElement('Elemento 2')],
-        [SequenceDiagramElement('Elemento 3')],
+        [{0: SequenceDiagramElement('Elemento 1'), 1: SequenceDiagramElement('Elemento 2')}],
+        [{0: SequenceDiagramElement('Elemento 2')}],
+        [{0: SequenceDiagramElement('Elemento 1'), 1: SequenceDiagramElement('Elemento 3')}],
     ])
-    def test_set_life_lines(self, life_line):
-        self.sequence_diagram.set_life_lines(life_line)
-        self.assertListEqual(self.sequence_diagram.get_life_lines(), [life_line])
-
-    @parameterized.expand([
-        [SequenceDiagramElement('Elemento 1')],
-        [SequenceDiagramElement('Elemento 2')],
-        [SequenceDiagramElement('Elemento 3')],
-    ])
-    def test_set_elements(self, element):
-        self.sequence_diagram.set_elements(element)
-        self.assertListEqual(self.sequence_diagram.get_elements(), [element])
+    def test_set_life_lines_list(self, life_lines):
+        self.sequence_diagram.set_life_lines(life_lines)
+        self.assertDictEqual(self.sequence_diagram.get_life_lines(), life_lines)
 
     def tearDown(self):
         self.sequence_diagram.dispose()

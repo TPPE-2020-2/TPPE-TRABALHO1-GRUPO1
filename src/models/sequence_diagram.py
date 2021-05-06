@@ -1,4 +1,5 @@
 from models.sequence_diagram_element import SequenceDiagramElement
+from models.lifeline import Lifeline
 from utils.utils import Util
 util = Util()
 
@@ -6,7 +7,7 @@ class SequenceDiagram():
     def __init__(self, name='', guard_condition=''):
         self.name = name
         self.guard_condition = guard_condition
-        self.life_lines = []
+        self.life_lines = {}
         self.messages = {}
         self.fragments = []
 
@@ -36,9 +37,9 @@ class SequenceDiagram():
    
     def set_guard_condition(self, guard_condition):
         self.guard_condition = guard_condition
-
-    def set_life_lines(self, life_line):
-        self.life_lines = life_line
+    
+    def set_life_lines(self, life_lines: dict):
+        self.life_lines = life_lines
   
     def set_messages(self, messages):
         self.messages[messages.get_name()] = messages
@@ -67,14 +68,17 @@ class SequenceDiagram():
         xml = '<SequenceDiagrams>\n'
         xml += util.get_tab(4) + '<Lifelines>\n'
         for lifeline in self.life_lines.values():
+            print("lifeline type: " + str(type(lifeline)))
             xml += util.get_tab(8) + f'<Lifeline name="{lifeline.name}">' + '\n'
         xml += util.get_tab(4) + '</Lifelines>\n'
         xml += util.get_tab(4) + '<Fragments>\n'
         for fragment in self.fragments:
+            print("fragment type: " + str(type(fragment)))
             xml += util.get_tab(8) + f'<Optional name="{fragment.name}" representedBy="{fragment.represented_by}">\n'
         xml += util.get_tab(4) + '</Fragments>\n'
         xml += util.get_tab(4) + f'<SequenceDiagram name="{self.name}">\n'
         for message in self.messages.values():
+            print("message type: " + str(type(message)))
             xml += util.get_tab(8) + f'<Message name="{message.name}" prob="{message.prob}" source="{message.source.name}" target="{message.target.name}">\n'
         xml += util.get_tab(8) + f'<Fragment name="{fragment.name}">\n'
         xml += util.get_tab(4) + '</SequenceDiagram>\n'
