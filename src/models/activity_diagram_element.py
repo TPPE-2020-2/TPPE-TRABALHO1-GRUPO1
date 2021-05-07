@@ -26,6 +26,3 @@ class ActivityDiagramElement():
 
     def get_element_type(self):
         return self.element_type
-
-    def to_xml(self):
-        return f'<{self.element_type} name="{self.name}"/>'

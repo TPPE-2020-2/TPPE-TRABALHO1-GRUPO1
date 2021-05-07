@@ -1,6 +1,6 @@
 from errors.errors import OrderError, MissMergeError
 from time import sleep
-
+from utils.to_xml import ToXml
 
 class Util():
     def __init__(self):
@@ -81,7 +81,8 @@ class Util():
             self.check_end_node_existence(activity_diagram.get_elements())
         except OrderError as e:
             raise OrderError(e)
-        xml = activity_diagram.to_xml()
+        to_xml = ToXml(activity_diagram)
+        xml = to_xml.compute()
         f = open(f"xmls/{activity_diagram.name}.xml", "w+")
         f.write(xml)
         f.close()

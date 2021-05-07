@@ -44,6 +44,3 @@ class Message(SequenceDiagramElement):
 
     def get_message_type(self):
         return self.message_type
-
-    def to_xml(self):
-        return ""

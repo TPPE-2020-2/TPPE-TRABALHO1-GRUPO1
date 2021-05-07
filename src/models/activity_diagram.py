@@ -1,7 +1,3 @@
-from utils.utils import Util
-util = Util()
-
-
 class ActivityDiagram():
     def __init__(self, start_node=None, name=''):
         self.elements = {}
@@ -65,18 +61,3 @@ class ActivityDiagram():
 
     def get_sequence_diagram(self):
         return self.sequence_diagrams
-
-    def to_xml(self):
-        xml = f'<ActivityDiagram name="{self.name}">\n'
-        xml += util.get_tab(4) + '<ActivityDiagramElements>\n'
-        for element in self.elements.values():
-            xml += util.get_tab(8) + element.to_xml() + '\n'
-        xml += util.get_tab(4) + '</ActivityDiagramElements>\n'
-        xml += util.get_tab(4) + '<ActivityDiagramTransitions>\n'
-        for transition in self.transitions.values():
-            xml += util.get_tab(8) + transition.to_xml() + '\n'
-        xml += util.get_tab(4) + '</ActivityDiagramTransitions>\n'
-        xml += '</ActivityDiagram>\n'
-        for sequence_diagram in self.sequence_diagrams.values():
-            xml += sequence_diagram.to_xml()
-        return xml

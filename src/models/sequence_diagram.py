@@ -1,7 +1,5 @@
 from models.sequence_diagram_element import SequenceDiagramElement
 from models.lifeline import Lifeline
-from utils.utils import Util
-util = Util()
 
 class SequenceDiagram():
     def __init__(self, name='', guard_condition=''):
@@ -61,25 +59,3 @@ class SequenceDiagram():
 
     def get_fragments(self):
         return self.fragments
-
-    def to_xml(self):
-        xml = '<SequenceDiagrams>\n'
-        xml += util.get_tab(4) + '<Lifelines>\n'
-        for lifeline in self.life_lines.values():
-            xml += util.get_tab(8) + f'<Lifeline name="{lifeline.name}"/>' + '\n'
-        xml += util.get_tab(4) + '</Lifelines>\n'
-        if len(self.fragments) > 0:
-            xml += util.get_tab(4) + '<Fragments>\n'
-        for fragment in self.fragments:
-            xml += util.get_tab(8) + f'<Optional name="{fragment.name}" representedBy="{fragment.represented_by}"/>\n'
-        if len(self.fragments) > 0:
-            xml += util.get_tab(4) + '</Fragments>\n'
-        for fragment in self.fragments:
-            sequence_diagram = fragment.sequence_diagram
-            xml += util.get_tab(4) + f'<SequenceDiagram name="{sequence_diagram.name}">\n'
-            for message in sequence_diagram.messages.values():
-                xml += util.get_tab(8) + f'<Message name="{message.name}" prob="{message.prob}" source="{message.source.name}" target="{message.target.name}"/>\n'
-            xml += util.get_tab(8) + f'<Fragment name="{fragment.name}"/>\n'
-            xml += util.get_tab(4) + '</SequenceDiagram>\n'
-        xml += '</SequenceDiagrams>\n'
-        return xml
