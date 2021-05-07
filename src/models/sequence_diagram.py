@@ -63,26 +63,23 @@ class SequenceDiagram():
         return self.fragments
 
     def to_xml(self):
-        print(self.messages)
-        print(type(self.messages))
         xml = '<SequenceDiagrams>\n'
         xml += util.get_tab(4) + '<Lifelines>\n'
         for lifeline in self.life_lines.values():
-            print("lifeline type: " + str(type(lifeline)))
             xml += util.get_tab(8) + f'<Lifeline name="{lifeline.name}">' + '\n'
         xml += util.get_tab(4) + '</Lifelines>\n'
-        xml += util.get_tab(4) + '<Fragments>\n'
+        if len(self.fragments) > 0:
+            xml += util.get_tab(4) + '<Fragments>\n'
         for fragment in self.fragments:
-            print("fragment type: " + str(type(fragment)))
             xml += util.get_tab(8) + f'<Optional name="{fragment.name}" representedBy="{fragment.represented_by}">\n'
-        xml += util.get_tab(4) + '</Fragments>\n'
-        xml += util.get_tab(4) + f'<SequenceDiagram name="{self.name}">\n'
-        for message in self.messages.values():
-            print("message type: " + str(type(message)))
-            xml += util.get_tab(8) + f'<Message name="{message.name}" prob="{message.prob}" source="{message.source.name}" target="{message.target.name}">\n'
-        xml += util.get_tab(8) + f'<Fragment name="{fragment.name}">\n'
-        xml += util.get_tab(4) + '</SequenceDiagram>\n'
+        if len(self.fragments) > 0:
+            xml += util.get_tab(4) + '</Fragments>\n'
+        for fragment in self.fragments:
+            sequence_diagram = fragment.sequence_diagram
+            xml += util.get_tab(4) + f'<SequenceDiagram name="{sequence_diagram.name}">\n'
+            for message in sequence_diagram.messages.values():
+                xml += util.get_tab(8) + f'<Message name="{message.name}" prob="{message.prob}" source="{message.source.name}" target="{message.target.name}">\n'
+            xml += util.get_tab(8) + f'<Fragment name="{fragment.name}">\n'
+            xml += util.get_tab(4) + '</SequenceDiagram>\n'
         xml += '</SequenceDiagrams>\n'
-
-        print(xml)
         return xml

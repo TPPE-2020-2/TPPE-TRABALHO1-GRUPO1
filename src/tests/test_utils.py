@@ -1,4 +1,6 @@
 import unittest
+import os
+import random
 from utils.utils import Util
 from models.activity_diagram import ActivityDiagram
 from models.activity_diagram_element import ActivityDiagramElement
@@ -63,10 +65,111 @@ class TestMessage(unittest.TestCase):
         with self.assertRaises(OrderError):
           response = self.util.check_join_possibility(nodes)
 
-    def test_generate_diagram(self):
-        activity_diagram = self.mock_activity_diagram(True, True, True)
-        print(activity_diagram)
-        self.assertTrue(True)
+    @parameterized.expand([
+        [False, False, False, ('<ActivityDiagram name="ActivityDiagram1">\n'
+                                '    <ActivityDiagramElements>\n'
+                                '        <StartNode name="StartNode1"/>\n'
+                                '        <DecisionNode name="DecisionNode1"/>\n'
+                                '        <MergeNode name="MergeNode1"/>\n'
+                                '        <EndNode name="EndNode1"/>\n'
+                                '    </ActivityDiagramElements>\n'
+                                '    <ActivityDiagramTransitions>\n'
+                                '        <Transition name="FirstTr" prob="0.5"/>\n'
+                                '        <Transition name="Tr2" prob="0.5"/>\n'
+                                '        <Transition name="LastTr" prob="0.5"/>\n'
+                                '    </ActivityDiagramTransitions>\n'
+                                '</ActivityDiagram>\n')],
+        [True, False, False, ('<ActivityDiagram name="ActivityDiagram1">\n'
+                                '    <ActivityDiagramElements>\n'
+                                '        <StartNode name="StartNode1"/>\n'
+                                '        <DecisionNode name="DecisionNode1"/>\n'
+                                '        <MergeNode name="MergeNode1"/>\n'
+                                '        <Activity name="ActivityNode1"/>\n'
+                                '        <EndNode name="EndNode1"/>\n'
+                                '    </ActivityDiagramElements>\n'
+                                '    <ActivityDiagramTransitions>\n'
+                                '        <Transition name="FirstTr" prob="0.5"/>\n'
+                                '        <Transition name="Tr2" prob="0.5"/>\n'
+                                '        <Transition name="Tr3" prob="0.5"/>\n'
+                                '        <Transition name="LastTr" prob="0.5"/>\n'
+                                '    </ActivityDiagramTransitions>\n'
+                                '</ActivityDiagram>\n'
+                                '<SequenceDiagrams>\n'
+                                '    <Lifelines>\n'
+                                '        <Lifeline name="LifeLineX">\n'
+                                '    </Lifelines>\n'
+                                '</SequenceDiagrams>\n')],
+        [True, True, False, ('<ActivityDiagram name="ActivityDiagram1">\n'
+                                '    <ActivityDiagramElements>\n'
+                                '        <StartNode name="StartNode1"/>\n'
+                                '        <DecisionNode name="DecisionNode1"/>\n'
+                                '        <MergeNode name="MergeNode1"/>\n'
+                                '        <Activity name="ActivityNode1"/>\n'
+                                '        <EndNode name="EndNode1"/>\n'
+                                '    </ActivityDiagramElements>\n'
+                                '    <ActivityDiagramTransitions>\n'
+                                '        <Transition name="FirstTr" prob="0.5"/>\n'
+                                '        <Transition name="Tr2" prob="0.5"/>\n'
+                                '        <Transition name="Tr3" prob="0.5"/>\n'
+                                '        <Transition name="LastTr" prob="0.5"/>\n'
+                                '    </ActivityDiagramTransitions>\n'
+                                '</ActivityDiagram>\n'
+                                '<SequenceDiagrams>\n'
+                                '    <Lifelines>\n'
+                                '        <Lifeline name="LifeLineX">\n'
+                                '    </Lifelines>\n'
+                                '    <Fragments>\n'
+                                '        <Optional name="Fragment1" representedBy="SequenceDiagram">\n'
+                                '    </Fragments>\n'
+                                '    <SequenceDiagram name="SequenceDiagram">\n'
+                                '        <Message name="MensagemX" prob="0.5" source="LifeLineX" target="LifeLineX">\n'
+                                '        <Fragment name="Fragment1">\n'
+                                '    </SequenceDiagram>\n'
+                                '</SequenceDiagrams>\n')],
+        [True, True, True, ('<ActivityDiagram name="ActivityDiagram1">\n'
+                                '    <ActivityDiagramElements>\n'
+                                '        <StartNode name="StartNode1"/>\n'
+                                '        <DecisionNode name="DecisionNode1"/>\n'
+                                '        <MergeNode name="MergeNode1"/>\n'
+                                '        <Activity name="ActivityNode1"/>\n'
+                                '        <EndNode name="EndNode1"/>\n'
+                                '    </ActivityDiagramElements>\n'
+                                '    <ActivityDiagramTransitions>\n'
+                                '        <Transition name="FirstTr" prob="0.5"/>\n'
+                                '        <Transition name="Tr2" prob="0.5"/>\n'
+                                '        <Transition name="Tr3" prob="0.5"/>\n'
+                                '        <Transition name="LastTr" prob="0.5"/>\n'
+                                '    </ActivityDiagramTransitions>\n'
+                                '</ActivityDiagram>\n'
+                                '<SequenceDiagrams>\n'
+                                '    <Lifelines>\n'
+                                '        <Lifeline name="LifeLineX">\n'
+                                '    </Lifelines>\n'
+                                '    <Fragments>\n'
+                                '        <Optional name="Fragment1" representedBy="SequenceDiagram">\n'
+                                '        <Optional name="Fragment2" representedBy="SequenceDiagram">\n'
+                                '    </Fragments>\n'
+                                '    <SequenceDiagram name="SequenceDiagram">\n'
+                                '        <Message name="MensagemX" prob="0.5" source="LifeLineX" target="LifeLineX">\n'
+                                '        <Fragment name="Fragment1">\n'
+                                '    </SequenceDiagram>\n'
+                                '    <SequenceDiagram name="SequenceDiagram">\n'
+                                '        <Message name="MensagemX" prob="0.5" source="LifeLineX" target="LifeLineX">\n'
+                                '        <Fragment name="Fragment2">\n'
+                                '    </SequenceDiagram>\n'
+                                '</SequenceDiagrams>\n')],
+    ])
+    def test_generate_diagram(self, has_activity, has_fragment,
+                            has_multiple_fragments, result_diagram):
+        activity_diagram = self.mock_activity_diagram(has_activity, has_fragment,
+                                                    has_multiple_fragments)
+        self.util.generate_diagram(activity_diagram)
+        diagram_file = open(f'xmls/{activity_diagram.name}.xml', 'r')
+        diagram_from_file = diagram_file.read()
+        self.assertEqual(diagram_from_file, result_diagram)
+        diagram_file.close()
+        os.remove(f'xmls/{activity_diagram.name}.xml')
+
 
     def mock_activity_diagram(self, has_activity=False, has_fragment=False, has_multiple_fragments=False):
         activity_diagram = ActivityDiagram(name='ActivityDiagram1')
@@ -107,7 +210,7 @@ class TestMessage(unittest.TestCase):
         sequence_diagram = SequenceDiagram(name='SequenceDiagram', guard_condition=True)
         
         # LifeLines
-        lifelines = {0 : Lifeline(id=0, name='LifeLineXs')}
+        lifelines = {0 : Lifeline(id=0, name='LifeLineX')}
         sequence_diagram.set_life_lines(lifelines)
         
         # Message
@@ -122,7 +225,7 @@ class TestMessage(unittest.TestCase):
                                 sequence_diagram=sequence_diagram)
             sequence_diagram.set_fragments(fragment)
         if has_multiple_fragments:
-            fragment = Fragment(name='Fragment1',
+            fragment = Fragment(name='Fragment2',
                                 represented_by=sequence_diagram.name,
                                 sequence_diagram=self.mock_sequence_diagram(False, False))
             sequence_diagram.set_fragments(fragment)

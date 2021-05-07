@@ -78,6 +78,5 @@ class ActivityDiagram():
         xml += util.get_tab(4) + '</ActivityDiagramTransitions>\n'
         xml += '</ActivityDiagram>\n'
         for sequence_diagram in self.sequence_diagrams.values():
-            print('Act Dg sq: ' + str(type(sequence_diagram)))
             xml += sequence_diagram.to_xml()
         return xml
