@@ -17,3 +17,17 @@ class Lifeline(SequenceDiagramElement):
     
     def get_id(self):
         return self.id
+
+    def get_lifelines(self):
+        lifelines = {}
+        lifelines_amount = input('Insert the number of lifelines: ')
+        for index, lifeline in enumerate(range(int(lifelines_amount))):
+            lifeline_name = input(f'Insert the {index + 1} Lifeline name: ')
+            lifeline = Lifeline(id=index, name=lifeline_name)
+            lifelines[index] = lifeline
+        return lifelines
+    
+    def print_lifelines(self, lifelines):
+        print('Your Lifelines: ')
+        for index, lifeline in lifelines.items():
+            print('Lifeline', str(index) + ':', lifeline.name)

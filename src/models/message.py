@@ -1,4 +1,6 @@
 from models.sequence_diagram_element import SequenceDiagramElement
+from models.lifeline import Lifeline
+
 class Message(SequenceDiagramElement):
     def __init__(self, name='', source=None, target=None, prob=0, message_type=''):
         super().__init__(name)
@@ -44,3 +46,43 @@ class Message(SequenceDiagramElement):
 
     def get_message_type(self):
         return self.message_type
+
+    def print_message_type(self):
+        print('These are your message type options, please select one: ',
+                '\n1 - Synchronous',
+                '\n2 - Aynchronous',
+                '\n3 - Reply')
+
+    def add_message(self, lifelines):
+        message_type_dict = {
+            1: 'Synchronous',
+            2: 'Assynchronous',
+            3: 'Reply'
+        }
+
+        message_name = input('Insert the Message name: ')
+        while len(message_name) == 0:
+            print('MessageFormatException - You must define a message name')
+
+        print('Select the source Lifeline: ')
+        Lifeline().print_lifelines(lifelines)
+        try:
+            source_lifeline = lifelines[int(input('Which is the initial Lifeline? '))]
+        except:
+            print('MessageFormatException - Please select a valid Lifeline')
+            source_lifeline = lifelines[int(input('Which is the initial Lifeline? '))]
+
+        try:
+            target_lifeline = lifelines[int(input('Which is the final Lifeline? '))]
+        except:
+            print('MessageFormatException - Please select a valid Lifeline')
+            target_lifeline = lifelines[int(input('Which is the initial Lifeline? '))]
+
+        prob = input('How much is the message probability? ')
+        self.print_message_type()
+        message_type = message_type_dict[int(input())]
+
+        message = Message(name=message_name, source=source_lifeline,
+                          target=target_lifeline, prob=prob,
+                          message_type=message_type)
+        return message
