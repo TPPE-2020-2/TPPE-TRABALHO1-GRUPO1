@@ -101,7 +101,7 @@ class ActivityDiagram():
                     self.set_elements(activity_node)
                     self.add_transition(activity_node, util)
                     print('Create the Sequence Diagram that represents the activity ' + activity_node_name)
-                    sequence_diagram = sequence_diagram.create_sequence_diagram()
+                    sequence_diagram = sequence_diagram
                     sequence_diagram = sequence_diagram.sequence_diagram_menu(sequence_diagram, util)
                     self.set_sequence_diagrams(sequence_diagram)
                 except OrderError as e:
