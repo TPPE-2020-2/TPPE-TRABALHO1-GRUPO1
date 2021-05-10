@@ -2,60 +2,70 @@ from models.sequence_diagram_element import SequenceDiagramElement
 from models.lifeline import Lifeline
 from models.fragment import Fragment
 from models.message import Message
+from models.message_in import MessageIn
+from models.fragment_in import FragmentIn
 
-class SequenceDiagram():
-    def __init__(self, name='', guard_condition=''):
+class SequenceDiagram:
+
+    def initialize_attributes(self, guard_condition, name):
         self.name = name
         self.guard_condition = guard_condition
         self.life_lines = {}
         self.messages = {}
         self.fragments = []
 
-    def __eq__(self, sequence_diagram):  # pragma: no cover
+    def equality(self, sequence_diagram):
         return self.name == sequence_diagram.name and \
-            self.guard_condition == sequence_diagram.guard_condition and \
-            self.life_lines == sequence_diagram.life_lines and \
-            self.messages == sequence_diagram.messages and \
-            self.fragments == sequence_diagram.fragments
-    
+               self.guard_condition == sequence_diagram.guard_condition and \
+               self.life_lines == sequence_diagram.life_lines and \
+               self.messages == sequence_diagram.messages and \
+               self.fragments == sequence_diagram.fragments
+
+    def __init__(self, name='', guard_condition=''):
+        self.initialize_attributes(guard_condition, name)
+
+    def __eq__(self, sequence_diagram):  # pragma: no cover
+        return self.equality(sequence_diagram)
+
     def __str__(self):  # pragma: no cover
-        return 'Name: {}\nGuard Condition: {}\nLife Lines: {}\nElements: {}\n'.format(self.name, \
-                                                                            self.guard_condition, \
-                                                                            self.life_lines, \
-                                                                            self.messages, \
-                                                                            self.fragments)
+        return 'Name: {}\nGuard Condition: {}\nLife Lines: {}\nElements: {}\n'.format(self.name, self.guard_condition,
+                                                                                      self.life_lines, self.messages,
+                                                                                      self.fragments)
 
     def dispose(self):
-        self.name = ''
-        self.guard_condition = ''
-        self.life_lines = {}
-        self.messages = {}
-        self.fragments = []
+        self.initialize_attributes('', '')
 
     def set_name(self, name):
         self.name = name
-   
+
     def set_guard_condition(self, guard_condition):
         self.guard_condition = guard_condition
-    
+
     def set_life_lines(self, life_lines: dict):
         self.life_lines = life_lines
-  
+
     def set_messages(self, messages):
-        self.messages[messages.get_name()] = messages
+        if type(messages) == type([]):
+            for message in messages:
+                self.messages[message.get_name()] = message
+        else:
+            self.messages[messages.get_name()] = messages
 
     def set_fragments(self, fragments):
-        self.fragments.append(fragments)
+        if type(fragments) == type([]):
+            self.fragments = [*self.fragments, *fragments]
+        else:
+            self.fragments.append(fragments)
 
     def get_name(self):
         return self.name
-   
+
     def get_guard_condition(self):
         return self.guard_condition
 
     def get_life_lines(self):
         return self.life_lines
-  
+
     def get_messages(self):
         return self.messages
 
@@ -78,10 +88,11 @@ class SequenceDiagram():
 
     def sequence_diagram_menu(self, sequence_diagram, util):
         util.clear()
-        lifeline = Lifeline()
-        message = Message()
-        lifelines = lifeline.get_lifelines()
-        self.set_life_lines(lifelines)
+        lifelines = Lifeline()
+        lifelines = lifelines.get_lifelines()
+        sequence_diagram.set_life_lines(lifelines)
+        items = [MessageIn(), FragmentIn()]
+        info = [lifelines, sequence_diagram.name]
         while True:
             print('----- Sequence Diagram Menu -----')
             print('Select the element you want to generate:\n'
@@ -89,15 +100,13 @@ class SequenceDiagram():
                 f'2 - {util.FRAGMENT}\n'
                 '3 - Return to Activity Diagram Menu')
             user_in = input('Insert your option: ')
-            if user_in == '1':
-                self.set_messages(message.add_message(lifelines))
-            elif user_in == '2':
-                if len(self.fragments) == 0:
-                    self.set_fragments(self.add_fragment(self.name))
-                else:
-                    self.set_fragments(self.add_fragment())
+            if user_in == '1' or user_in == '2':
+                option = int(user_in)-1
+                items[option].add(info[option])
             elif user_in == '3':
-                self.fragments[0].sequence_diagram = sequence_diagram
+                sequence_diagram.set_messages(items[0].messages)
+                sequence_diagram.set_fragments(items[1].fragments)
+                sequence_diagram.fragments[0].sequence_diagram = sequence_diagram
                 return sequence_diagram
             else:
                 util.clear()

@@ -26,8 +26,3 @@ class Lifeline(SequenceDiagramElement):
             lifeline = Lifeline(id=index, name=lifeline_name)
             lifelines[index] = lifeline
         return lifelines
-    
-    def print_lifelines(self, lifelines):
-        print('Your Lifelines: ')
-        for index, lifeline in lifelines.items():
-            print('Lifeline', str(index) + ':', lifeline.name)
