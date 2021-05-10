@@ -1,19 +1,10 @@
-from models.sequence_diagram_element import SequenceDiagramElement
-from models.lifeline import Lifeline
 from models.fragment import Fragment
-from models.message import Message
-from models.message_in import MessageIn
 from models.fragment_in import FragmentIn
+from models.lifeline import Lifeline
+from models.message_in import MessageIn
 
 
 class SequenceDiagram:
-
-    def initialize_attributes(self, guard_condition, name):
-        self.name = name
-        self.guard_condition = guard_condition
-        self.life_lines = {}
-        self.messages = {}
-        self.fragments = []
 
     def equality(self, sequence_diagram):
         return self.name == sequence_diagram.name and \
@@ -22,6 +13,18 @@ class SequenceDiagram:
                self.messages == sequence_diagram.messages and \
                self.fragments == sequence_diagram.fragments
 
+    def initialize_attributes(self, guard_condition, name):
+        self.name = name
+        self.guard_condition = guard_condition
+        self.life_lines = {}
+        self.messages = {}
+        self.fragments = []
+
+    def object_string(self):
+        return 'Name: {}\nGuard Condition: {}\nLife Lines: {}\nElements: {}\n'.format(self.name, self.guard_condition,
+                                                                                      self.life_lines, self.messages,
+                                                                                      self.fragments)
+
     def __init__(self, name='', guard_condition=''):
         self.initialize_attributes(guard_condition, name)
 
@@ -29,9 +32,7 @@ class SequenceDiagram:
         return self.equality(sequence_diagram)
 
     def __str__(self):  # pragma: no cover
-        return 'Name: {}\nGuard Condition: {}\nLife Lines: {}\nElements: {}\n'.format(self.name, self.guard_condition,
-                                                                                      self.life_lines, self.messages,
-                                                                                      self.fragments)
+        return self.object_string()
 
     def dispose(self):
         self.initialize_attributes('', '')
@@ -75,7 +76,7 @@ class SequenceDiagram:
 
     def create_sequence_diagram(self, diagram_name=None):
         print('----- Sequence Diagram -----')
-        if diagram_name != None:
+        if diagram_name is not None:
             self.name = diagram_name
         else:
             name = input('Insert the Sequence Diagram name: ')
@@ -112,17 +113,3 @@ class SequenceDiagram:
             else:
                 util.clear()
                 print('Invalid input. Please select again\n')
-
-    def add_fragment(self, sequence_diagram_name=None):
-        fragment_name = input('Insert the Fragment name: ')
-        if sequence_diagram_name != None:
-            diagram_name = sequence_diagram_name
-            sequence_diagram = None
-        else:
-            diagram_name = input('Insert the Sequence Diagram name: ')
-            print('Create the Sequence Diagram that is represented by the fragment ' + fragment_name)
-            sequence_diagram = self.create_sequence_diagram(diagram_name)
-            self.set_fragments(Fragment(name=fragment_name, represented_by=diagram_name))
-            sequence_diagram = self.sequence_diagram_menu(sequence_diagram)
-        fragment = Fragment(name=fragment_name, represented_by=diagram_name, sequence_diagram=sequence_diagram)
-        return fragment
