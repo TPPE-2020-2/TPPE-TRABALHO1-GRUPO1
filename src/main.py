@@ -6,6 +6,8 @@ from models.activity_diagram_element import ActivityDiagramElement
 from models.transition import Transition
 from models.lifeline import Lifeline
 from models.message import Message
+from models.message_in import MessageIn
+from models.fragment_in import FragmentIn
 from errors.errors import OrderError, MissMergeError
 from utils.utils import Util
 from time import sleep
@@ -138,6 +140,8 @@ def sequence_diagram_menu(sequence_diagram):
     util.clear()
     lifelines = get_lifelines()
     sequence_diagram.set_life_lines(lifelines)
+    items = [MessageIn(), FragmentIn()]
+    info = [lifelines, sequence_diagram.name]
     while True:
         print('----- Sequence Diagram Menu -----')
         print('Select the element you want to generate:\n'
@@ -145,15 +149,12 @@ def sequence_diagram_menu(sequence_diagram):
               f'2 - {util.FRAGMENT}\n'
               '3 - Return to Activity Diagram Menu')
         user_in = input('Insert your option: ')
-        if user_in == '1':
-            sequence_diagram.set_messages(add_message(lifelines))
-        elif user_in == '2':
-            print(len(sequence_diagram.fragments))
-            if len(sequence_diagram.fragments) == 0:
-                sequence_diagram.set_fragments(add_fragment(sequence_diagram.name))
-            else:
-                sequence_diagram.set_fragments(add_fragment())
+        if user_in == '1' or user_in == '2':
+            option = int(user_in)-1
+            items[option].add(info[option])
         elif user_in == '3':
+            sequence_diagram.set_messages(items[0].messages)
+            sequence_diagram.set_fragments(items[1].fragments)
             sequence_diagram.fragments[0].sequence_diagram = sequence_diagram
             return sequence_diagram
         else:
@@ -208,70 +209,6 @@ def get_lifelines():
         lifelines[index] = lifeline
         print()
     return lifelines
-
-
-def add_fragment(sequence_diagram_name=None):
-    fragment_name = input('Insert the Fragment name: ')
-    if sequence_diagram_name != None:
-        diagram_name = sequence_diagram_name
-        sequence_diagram = None
-    else:
-        diagram_name = input('Insert the Sequence Diagram name: ')
-        print('Create the Sequence Diagram that is represented by the fragment ' + fragment_name)
-        sequence_diagram = create_sequence_diagram(diagram_name)
-        sequence_diagram.set_fragments(Fragment(name=fragment_name, represented_by=diagram_name))
-        sequence_diagram = sequence_diagram_menu(sequence_diagram)
-    fragment = Fragment(name=fragment_name, represented_by=diagram_name, sequence_diagram=sequence_diagram)
-    return fragment
-
-
-def add_message(lifelines):
-    message_type_dict = {
-        1: 'Synchronous',
-        2: 'Assynchronous',
-        3: 'Reply'
-    }
-
-    message_name = input('Insert the Message name: ')
-    while(len(message_name)==0):
-        print('MessageFormatException - You must define a message name')
-
-    print('Select the source Lifeline: ')
-    print_lifelines(lifelines)
-    try:
-
-        source_lifeline = lifelines[int(input('Which is the initial Lifeline?'))]
-    except:
-        print('MessageFormatException - Please select a valid Lifeline')
-        source_lifeline = lifelines[int(input('Which is the initial Lifeline?'))]
-
-    try:
-        target_lifeline = lifelines[int(input('Which is the final Lifeline?'))]
-    except:
-        print('MessageFormatException - Please select a valid Lifeline')
-        target_lifeline = lifelines[int(input('Which is the initial Lifeline?'))]
-
-    prob = input('How much is the message probability?')
-    print_message_type()
-    message_type = message_type_dict[int(input())]
-
-    message = Message(name=message_name, source=source_lifeline,
-                      target=target_lifeline, prob=prob,
-                      message_type=message_type)
-    return message
-
-
-def print_lifelines(lifelines):
-    print('Your Lifelines: ')
-    for index, lifeline in lifelines.items():
-        print('Lifeline', str(index) + ':', lifeline.name)
-
-
-def print_message_type():
-    print('These are your message type options, please select one: ',
-          '\n 1 - Synchronous',
-          '\n 2 - Aynchronous',
-          '\n 3 - Reply')
 
 def create_sequence_diagram(diagram_name=None):
     print('----- Sequence Diagram -----')

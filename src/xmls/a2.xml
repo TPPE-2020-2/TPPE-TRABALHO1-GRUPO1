@@ -1,0 +1,24 @@
+<ActivityDiagram name="a2">
+    <ActivityDiagramElements>
+        <StartNode name="S1"/>
+        <Activity name="A1"/>
+        <EndNode name="E1"/>
+    </ActivityDiagramElements>
+    <ActivityDiagramTransitions>
+        <Transition name="T1" prob="0.0"/>
+        <Transition name="T2" prob="0.0"/>
+    </ActivityDiagramTransitions>
+</ActivityDiagram>
+<SequenceDiagrams>
+    <Lifelines>
+        <Lifeline name="L1"/>
+        <Lifeline name="L2"/>
+    </Lifelines>
+    <Fragments>
+        <Optional name="F1" representedBy="S1"/>
+    </Fragments>
+    <SequenceDiagram name="S1">
+        <Message name="M1" prob="0" source="L1" target="L2"/>
+        <Fragment name="F1"/>
+    </SequenceDiagram>
+</SequenceDiagrams>

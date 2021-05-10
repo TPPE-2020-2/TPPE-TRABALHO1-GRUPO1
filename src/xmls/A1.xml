@@ -1,0 +1,13 @@
+<ActivityDiagram name="A1">
+    <ActivityDiagramElements>
+        <StartNode name="S1"/>
+        <DecisionNode name="D1"/>
+        <MergeNode name="M1"/>
+        <EndNode name="E1"/>
+    </ActivityDiagramElements>
+    <ActivityDiagramTransitions>
+        <Transition name="T1" prob="1.0"/>
+        <Transition name="T2" prob="1.0"/>
+        <Transition name="T3" prob="1.0"/>
+    </ActivityDiagramTransitions>
+</ActivityDiagram>

@@ -42,10 +42,17 @@ class SequenceDiagram:
         self.life_lines = life_lines
 
     def set_messages(self, messages):
-        self.messages[messages.get_name()] = messages
+        if type(messages) == type([]):
+            for message in messages:
+                self.messages[message.get_name()] = message
+        else:
+            self.messages[messages.get_name()] = messages
 
     def set_fragments(self, fragments):
-        self.fragments.append(fragments)
+        if type(fragments) == type([]):
+            self.fragments = [*self.fragments, *fragments]
+        else:
+            self.fragments.append(fragments)
 
     def get_name(self):
         return self.name
