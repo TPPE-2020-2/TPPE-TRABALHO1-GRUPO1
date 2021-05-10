@@ -3,6 +3,7 @@ from models.activity_diagram_element import ActivityDiagramElement
 from models.transition import Transition
 from models.sequence_diagram import SequenceDiagram
 
+
 class ActivityDiagram():
     def __init__(self, start_node=None, name=''):
         self.elements = {}
@@ -13,10 +14,10 @@ class ActivityDiagram():
 
     def __eq__(self, activity_diagram):  # pragma: no cover
         return self.name == activity_diagram.name and \
-                self.start_node == activity_diagram.start_node and \
-                self.elements == activity_diagram.elements and \
-                self.sequence_diagrams == activity_diagram.sequence_diagrams
-    
+               self.start_node == activity_diagram.start_node and \
+               self.elements == activity_diagram.elements and \
+               self.sequence_diagrams == activity_diagram.sequence_diagrams
+
     def __str__(self):  # pragma: no cover
         str_message = r'{' + f'\n\tName: {self.name},\n\tStart Node: {self.start_node},\n\tElements: [\n'
         for element in self.elements.values():
@@ -42,10 +43,10 @@ class ActivityDiagram():
 
     def set_elements(self, element):
         self.elements[element.name] = element
-    
+
     def set_start_node(self, start_node):
         self.start_node = start_node
-    
+
     def set_name(self, name):
         self.name = name
 
@@ -74,15 +75,15 @@ class ActivityDiagram():
         while True:
             print('----- Activity Diagram Menu -----')
             print('Select the element you want to generate:\n'
-                f'1 - {util.START_NODE}\n'
-                f'2 - {util.ACTIVITY_NODE}\n'
-                f'3 - {util.DECISION_NODE}\n'
-                f'4 - {util.MERGE_NODE}\n'
-                f'5 - {util.END_NODE}\n'
-                '6 - Generate Diagram\n'
-                '7 - Return to Main Menu')
+                  f'1 - {util.START_NODE}\n'
+                  f'2 - {util.ACTIVITY_NODE}\n'
+                  f'3 - {util.DECISION_NODE}\n'
+                  f'4 - {util.MERGE_NODE}\n'
+                  f'5 - {util.END_NODE}\n'
+                  '6 - Generate Diagram\n'
+                  '7 - Return to Main Menu')
             user_in = input('Insert your option: ')
-            
+
             if user_in == '1':
                 try:
                     util.check_start_node_existence(self.get_elements(), util.START_NODE)
@@ -92,7 +93,7 @@ class ActivityDiagram():
                     self.set_start_node(start_node)
                 except OrderError as e:
                     util.print_and_clear(e)
-                
+
             elif user_in == '2':
                 try:
                     util.check_start_node_existence(self.get_elements(), util.ACTIVITY_NODE)
@@ -101,7 +102,7 @@ class ActivityDiagram():
                     self.set_elements(activity_node)
                     self.add_transition(activity_node, util)
                     print('Create the Sequence Diagram that represents the activity ' + activity_node_name)
-                    sequence_diagram = sequence_diagram.create_sequence_diagram()
+                    sequence_diagram = sequence_diagram
                     sequence_diagram = sequence_diagram.sequence_diagram_menu(sequence_diagram, util)
                     self.set_sequence_diagrams(sequence_diagram)
                 except OrderError as e:
@@ -127,7 +128,7 @@ class ActivityDiagram():
                     self.add_transition(merge_node, util)
                 except OrderError as e:
                     util.print_and_clear(e)
-            
+
             elif user_in == '5':
                 try:
                     util.check_start_node_existence(self.get_elements(), util.END_NODE)
@@ -147,10 +148,10 @@ class ActivityDiagram():
                     return 0
                 except Exception as e:
                     util.print_and_clear(e)
-        
+
             elif user_in == '7':
                 return 0
-            
+
             else:
                 util.clear()
                 print('Invalid input. Please select again\n')
@@ -163,7 +164,7 @@ class ActivityDiagram():
         name = input('Type the transition name: ')
         print('Select the source node of the actual node:')
         index = 0
-        while True :
+        while True:
             for index, element in enumerate(before_element):
                 print(f'{index} - {element}')
             try:
@@ -187,6 +188,6 @@ class ActivityDiagram():
 
         self.set_transitions(Transition(name=name,
                                         prob=prob,
-                                        source=source_node, 
-                                        target=target_element, 
+                                        source=source_node,
+                                        target=target_element,
                                         element_type=util.TRANSITION_NODE))
