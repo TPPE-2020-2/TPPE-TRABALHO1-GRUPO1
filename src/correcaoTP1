@@ -1,0 +1,15 @@
+
+Comentários: 
+------------------
+Apenas dois tipos de exceções são lançados: OrderError e MissMergeError. As demais exceções do enunciado não foram contempladas: ActivityRepresentationException, MessageFormatException, EmptyGuardConditionException, EmptyOptionalFragment, 
+
+Exceções que deveriam ser lançadas ao criar diagramas de sequencia nao foram lancadas e capturadas. 
+
+Critérios de avaliação:
+-----------------------
+
+O programa funciona como deveria (30 %)?  30 pontos
+Testes parametrizados foram implementados (20%) ? 20 pontos
+Classes de exceções foram implementadas? Excecoes foram lançadas e tratadas? Testes de excecoes foram implementados? (- 10% para cada exceção não implementada adequadamente, limitado a 50% da nota):  10 pontos.
+
+NOTA FINAL: 60 pontos.
