@@ -1,0 +1,23 @@
+Observações:
+------------
+Suite de testes executando corretamente. 
+
+
+Critérios de avaliação:
+-----------------------
+
+Ref. 1 - mover método ou mover atributo (20 pontos): NOk - 0 pontos. Não foi
+					aplicado mover métodou mover atributo,
+					mas sim extração de método para uma
+                                        nova classe Menu.
+
+Ref. 2 - extrair método (20 pontos): OK - 20 pontos. Refatoração aplicada em
+                                     diversos metodos da classe SequenceDiagram.
+
+Ref. 3 - substituir método por objeto-método (30 pontos): OK - 30 pontos
+
+Ref. 4 - substituir condicional por polimorfismo (30 pontos): OK - 30 pontos método
+                                        polimórfico add criado e utilizado!
+
+
+NOTA FINAL: 80 pontos.
